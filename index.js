@@ -22,7 +22,7 @@ const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 app.use(cors());
 
 // MongoDB
-mongoose.set("debug", true);
+//mongoose.set("debug", true);
 mongoose.connect('mongodb+srv://admin:pwa@cluster0.ce5om.mongodb.net/PWA-Messenger?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
    console.log('connected to mongodb');
 });
