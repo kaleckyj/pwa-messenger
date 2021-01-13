@@ -1,10 +1,23 @@
 const express = require('express');
-const socket = require('socket.io');
+const socket = require('socket.io')(httpServer, {
+  cors: {
+    origin: "https://pwa-kalecky.herokuapp.com/",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+});
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const http = require ('http');
 const cors = require('cors');
+
+const corsOptions = {
+   origin: "*:*",
+   optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 4000
 
@@ -52,6 +65,8 @@ app.get('/', conversationController.getConvs);
 
 // Socket.io setup
 const io = socket(server);
+
+io.set('origins', '*:*');
 
 io.on('connection', (socket) => {
    console.log('socket connection established ', socket.id);
