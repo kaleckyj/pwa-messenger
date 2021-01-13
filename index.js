@@ -1,23 +1,10 @@
 const express = require('express');
-const socket = require('socket.io')(httpServer, {
-  cors: {
-    origin: "https://pwa-kalecky.herokuapp.com/",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
-});
+const socket = require('socket.io');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const http = require ('http');
 const cors = require('cors');
-
-const corsOptions = {
-   origin: "*:*",
-   optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 4000
 
@@ -31,11 +18,8 @@ const conversationController = require('./controllers/conversation-controller');
 const app = express();
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-// CORS
-app.use(cors());
-
 // MongoDB
-//mongoose.set("debug", true);
+mongoose.set("debug", true);
 mongoose.connect('mongodb+srv://admin:pwa@cluster0.ce5om.mongodb.net/PWA-Messenger?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
    console.log('connected to mongodb');
 });
@@ -65,8 +49,6 @@ app.get('/', conversationController.getConvs);
 
 // Socket.io setup
 const io = socket(server);
-
-io.set('origins', '*:*');
 
 io.on('connection', (socket) => {
    console.log('socket connection established ', socket.id);
