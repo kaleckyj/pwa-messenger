@@ -31,18 +31,27 @@ exports.getConv = function(req, res, next) {
 //POST create a conversation
 exports.createConv = [   
    (req, res, next) => {
-      const newConv = new Conversation({ 
-         members: req.body.members,
-         messages: []
-      });
-      newConv.save(function (err) {
-         if (err) { return next(err, savedConv); }
+      Conversation.find({members: req.body.members}, 'id').exec(function (err, foundConv) {
+         if (err) { return next(err); }
 
-         if (newConv != null) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify(newConv.toItem(), null, 3)); 
+         if (foundConv.length <= 0) {      
+            const newConv = new Conversation({ 
+               members: req.body.members,
+               messages: []
+            });
+            newConv.save(function (err) {
+               if (err) { return next(err, savedConv); }
+      
+               if (newConv != null) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify(newConv.toItem(), null, 3)); 
+               }
+            });
+         } else {
+            res.send(null); 
          }
-      });
+      });    
+      
    }
 ];
 

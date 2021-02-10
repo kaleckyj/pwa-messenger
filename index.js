@@ -49,13 +49,16 @@ app.get('/', conversationController.getConvs);
 
 // Socket.io setup
 io.on('connection', (socket) => {
-   //console.log('socket connection established ', socket.id);
+   console.log('socket connection established ', socket.id);
 
    socket.on('disconnect', () => console.log('Client disconnected', socket.id));
 
    socket.on('message', (message) => {    //handle receiving and sending messages
-      //console.log(message);
       socket.broadcast.emit("message", message);
+   });
+
+   socket.on('conversation', (conv) => {    //handle receiving and sending messages
+      socket.broadcast.emit("conversation", conv);
    });
 
 });
