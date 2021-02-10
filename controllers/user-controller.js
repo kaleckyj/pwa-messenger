@@ -6,6 +6,9 @@ exports.getUsers = function(req, res, next) {
       .exec(function (err, userList) {
          if (err) { return next(err); }
 
+         for (let i = 0; i < userList.length; i++) {
+            if (userList[i] != null) userList[i]  = userList[i].toItem();            
+         }
          res.setHeader('Content-Type', 'application/json');
          res.send(JSON.stringify(userList, null, 3));         
    });
@@ -13,20 +16,24 @@ exports.getUsers = function(req, res, next) {
 
 exports.getUser = function(req, res, next) {   
     
-   User.findOne({id: req.params.id}, 'id name').exec(function (err, foundUser) {
+   User.findById(req.params.id, 'id name').exec(function (err, foundUser) {
       if (err) { return next(err); }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(foundUser, null, 3)); 
+      
+      if (foundUser != null) {
+         res.setHeader('Content-Type', 'application/json');
+         res.send(JSON.stringify(foundUser.toItem(), null, 3)); 
+      }
    });       
 }
 
 //POST
 exports.login = function(req, res, next) {
-   User.findOne({name: req.body.name}, 'id name').exec(function (err, foundUser) {
+   User.findOne({name: req.body.name, password: req.body.password}, 'id name').exec(function (err, foundUser) {
       if (err) { return next(err); }
 
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(foundUser, null, 3)); 
+      if (foundUser != null) {
+         res.setHeader('Content-Type', 'application/json');
+         res.send(JSON.stringify(foundUser.toItem(), null, 3)); 
+      }
    });  
 }
