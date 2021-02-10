@@ -10,6 +10,15 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 
+var cors_proxy = require('cors-anywhere');
+cors_proxy.createServer({
+    originWhitelist: [], // Allow all origins
+    requireHeader: ['origin', 'x-requested-with'],
+    removeHeaders: ['cookie', 'cookie2']
+})/*.listen(PORT, host, function() {
+    //console.log('Running CORS Anywhere on ' + host + ':' + port);
+});*/
+
 app.use(function(req, res, next) {
    res.header("Access-Control-Allow-Origin", '*');
    res.header("Access-Control-Allow-Credentials", true);
