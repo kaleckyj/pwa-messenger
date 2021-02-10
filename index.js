@@ -10,23 +10,6 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 
-var cors_proxy = require('cors-anywhere');
-cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeader: ['origin', 'x-requested-with'],
-    removeHeaders: ['cookie', 'cookie2']
-})/*.listen(PORT, host, function() {
-    //console.log('Running CORS Anywhere on ' + host + ':' + port);
-});*/
-
-app.use(function(req, res, next) {
-   res.header("Access-Control-Allow-Origin", '*');
-   res.header("Access-Control-Allow-Credentials", true);
-   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-   res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-   next();
-});
-
 const userRoutes = require('./routes/user-routes');
 const loginRoutes = require('./routes/login-routes');
 const conversationRoutes = require('./routes/conversation-routes');
@@ -43,7 +26,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // CORS
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 // use parsers
 app.use(bodyParser.json());
